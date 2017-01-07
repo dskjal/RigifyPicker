@@ -50,7 +50,7 @@ def createButton(name):
 
 def isPitchipoy():
     try:
-        return bpy.context.active_object.data.bones['eyes'] != None
+        return bpy.context.active_object.data.bones['tweak_spine.005'] != None
     except:
         return False
 
