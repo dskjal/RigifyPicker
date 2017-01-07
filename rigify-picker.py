@@ -100,291 +100,288 @@ class UI(bpy.types.Panel):
           return 1
   
   def draw(self, context):
-    if isPitchipoy():
-        print("not impremented")
-    else:
-        bodyScale = 1.5
-        armWidth = 0.3
-        thighHight = 6
-        footHeight = 2
-        handHeight = 2
+    bodyScale = 1.5
+    armWidth = 0.3
+    thighHight = 6
+    footHeight = 2
+    handHeight = 2
 
-        l = self.layout
-        count = 0
+    l = self.layout
+    count = 0
 
-        #head neck
-        row = l.row()
+    #head neck
+    row = l.row()
 
-        row.label("")
-        row.label("")
+    row.label("")
+    row.label("")
 
-        row.scale_x = 6
-        col = row.column()
-        col.scale_y = 2
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    row.scale_x = 6
+    col = row.column()
+    col.scale_y = 2
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
-        row.label("")
-        row.label("")
+    row.label("")
+    row.label("")
 
 
-        #shoulder
-        row = l.row()
-        row.label("")
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.label("")
+    #shoulder
+    row = l.row()
+    row.label("")
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.label("")
 
 
-        #---------------------------arm torso elbow tweak----------------------------------
-        row = l.row()
+    #---------------------------arm torso elbow tweak----------------------------------
+    row = l.row()
 
-        #right arm tweak
-        col = row.column()
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #right arm tweak
+    col = row.column()
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
-        #elbow pole target right
-        col = row.column()
-        col.label("")
-        col.label("")
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #elbow pole target right
+    col = row.column()
+    col.label("")
+    col.label("")
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
-        #right arm
-        col = row.column()
-        col.scale_y = bodyScale*2
-        col.scale_x = armWidth
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #right arm
+    col = row.column()
+    col.scale_y = bodyScale*2
+    col.scale_x = armWidth
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
-        #body
-        col = row.column()
-        col.scale_x = 0.5
-        col.scale_y = bodyScale
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #body
+    col = row.column()
+    col.scale_x = 0.5
+    col.scale_y = bodyScale
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
 
-        #left arm
-        col = row.column()
-        col.scale_y = bodyScale*2
-        col.scale_x = armWidth
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #left arm
+    col = row.column()
+    col.scale_y = bodyScale*2
+    col.scale_x = armWidth
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
-        #elbow pole target left
-        col = row.column()
-        col.label("")
-        col.label("")
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #elbow pole target left
+    col = row.column()
+    col.label("")
+    col.label("")
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
-        #right arm tweak
-        col = row.column()
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #right arm tweak
+    col = row.column()
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
 
 
-        #--------------------thigh hand ik/fk finger----------------------------
-        topRow = l.row()
+    #--------------------thigh hand ik/fk finger----------------------------
+    topRow = l.row()
 
-        col = topRow.column()
-        #right palm
-        row = col.row()
-        row.operator(metarigOperatorNames[count])
-        count += 1
+    col = topRow.column()
+    #right palm
+    row = col.row()
+    row.operator(metarigOperatorNames[count])
+    count += 1
 
-        #right hand
-        row = col.row()
-        row.scale_y = handHeight
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
+    #right hand
+    row = col.row()
+    row.scale_y = handHeight
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
 
-        #right finger
-        row = col.row()
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
-
-
-        col = topRow.column()
-        #right thigh
-        col.scale_y = thighHight
-        col.operator(metarigOperatorNames[count])
-        count += 1
-
-        #left thigh
-        col = topRow.column()
-        col.scale_y = thighHight
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #right finger
+    row = col.row()
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
 
 
-        col = topRow.column()
-        #left palm
-        row = col.row()
-        row.operator(metarigOperatorNames[count])
-        count += 1
+    col = topRow.column()
+    #right thigh
+    col.scale_y = thighHight
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
-        #left hand
-        row = col.row()
-        row.scale_y = handHeight
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
-
-        #right finger
-        row = col.row()
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
+    #left thigh
+    col = topRow.column()
+    col.scale_y = thighHight
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
 
-        #---------------------------- shin pole target tweak------------------------------
-        row = l.row()
+    col = topRow.column()
+    #left palm
+    row = col.row()
+    row.operator(metarigOperatorNames[count])
+    count += 1
 
-        #right tweak
-        col = row.column()
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #left hand
+    row = col.row()
+    row.scale_y = handHeight
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
 
-        #right pole target
-        col = row.column()
-        col.operator(metarigOperatorNames[count])
-        count += 1
-
-        #right shin
-        col = row.column()
-        col.scale_y = thighHight
-        col.operator(metarigOperatorNames[count])
-        count += 1
-
-        #left shin
-        col = row.column()
-        col.scale_y = thighHight
-        col.operator(metarigOperatorNames[count])
-        count += 1
-
-        #right pole target
-        col = row.column()
-        col.operator(metarigOperatorNames[count])
-        count += 1
-
-        #left tweak
-        col = row.column()
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #right finger
+    row = col.row()
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
 
 
+    #---------------------------- shin pole target tweak------------------------------
+    row = l.row()
 
-        #-----------------------------foot ik/fk--------------------------------
-        col = l.column()
+    #right tweak
+    col = row.column()
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
-        #right foot
-        row = col.row()
-        row.scale_y = footHeight
-        row.label("")
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
+    #right pole target
+    col = row.column()
+    col.operator(metarigOperatorNames[count])
+    count += 1
+
+    #right shin
+    col = row.column()
+    col.scale_y = thighHight
+    col.operator(metarigOperatorNames[count])
+    count += 1
+
+    #left shin
+    col = row.column()
+    col.scale_y = thighHight
+    col.operator(metarigOperatorNames[count])
+    count += 1
+
+    #right pole target
+    col = row.column()
+    col.operator(metarigOperatorNames[count])
+    count += 1
+
+    #left tweak
+    col = row.column()
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
 
-        #left foot
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
 
-        row.label("")
+    #-----------------------------foot ik/fk--------------------------------
+    col = l.column()
+
+    #right foot
+    row = col.row()
+    row.scale_y = footHeight
+    row.label("")
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
 
 
-        #------------------------------toe foot roll-----------------------
-        col = l.column()
+    #left foot
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
 
-        #right toe
-        row = col.row()
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
+    row.label("")
 
-        #left toe
-        row.operator(metarigOperatorNames[count])
-        count += 1
-        row.operator(metarigOperatorNames[count])
-        count += 1
 
-        #------------------------------root-------------------------------
-        col = l.column()
-        col.separator()
-        col.operator(metarigOperatorNames[count])
-        count += 1
+    #------------------------------toe foot roll-----------------------
+    col = l.column()
+
+    #right toe
+    row = col.row()
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
+
+    #left toe
+    row.operator(metarigOperatorNames[count])
+    count += 1
+    row.operator(metarigOperatorNames[count])
+    count += 1
+
+    #------------------------------root-------------------------------
+    col = l.column()
+    col.separator()
+    col.operator(metarigOperatorNames[count])
+    count += 1
 
 
 
