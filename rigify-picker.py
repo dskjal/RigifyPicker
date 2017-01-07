@@ -107,6 +107,7 @@ class UI(bpy.types.Panel):
         armWidth = 0.3
         thighHight = 6
         footHeight = 2
+        handHeight = 2
 
         l = self.layout
         count = 0
@@ -227,6 +228,7 @@ class UI(bpy.types.Panel):
 
         #right hand
         row = col.row()
+        row.scale_y = handHeight
         row.operator(metarigOperatorNames[count])
         count += 1
         row.operator(metarigOperatorNames[count])
@@ -267,6 +269,7 @@ class UI(bpy.types.Panel):
 
         #left hand
         row = col.row()
+        row.scale_y = handHeight
         row.operator(metarigOperatorNames[count])
         count += 1
         row.operator(metarigOperatorNames[count])
