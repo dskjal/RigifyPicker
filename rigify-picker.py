@@ -99,6 +99,11 @@ class UI(bpy.types.Panel):
       if context.object and context.object.type == 'ARMATURE' and context.active_object and context.active_object.mode == 'POSE':
           return 1
   
+  count = 0
+  def putButton(self, layout):
+      layout.operator(metarigOperatorNames[self.count])
+      self.count += 1
+
   def draw(self, context):
     bodyScale = 1.5
     armWidth = 0.3
@@ -107,7 +112,7 @@ class UI(bpy.types.Panel):
     handHeight = 2
 
     l = self.layout
-    count = 0
+    self.count = 0
 
     #head neck
     row = l.row()
@@ -118,10 +123,8 @@ class UI(bpy.types.Panel):
     row.scale_x = 6
     col = row.column()
     col.scale_y = 2
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
+    self.putButton(col)
 
     row.label("")
     row.label("")
@@ -130,10 +133,8 @@ class UI(bpy.types.Panel):
     #shoulder
     row = l.row()
     row.label("")
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
+    self.putButton(row)
     row.label("")
 
 
@@ -142,75 +143,55 @@ class UI(bpy.types.Panel):
 
     #right arm tweak
     col = row.column()
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
 
     #elbow pole target right
     col = row.column()
     col.label("")
     col.label("")
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
 
     #right arm
     col = row.column()
     col.scale_y = bodyScale*2
     col.scale_x = armWidth
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
+    self.putButton(col)
 
     #body
     col = row.column()
     col.scale_x = 0.5
     col.scale_y = bodyScale
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
 
 
     #left arm
     col = row.column()
     col.scale_y = bodyScale*2
     col.scale_x = armWidth
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
+    self.putButton(col)
 
     #elbow pole target left
     col = row.column()
     col.label("")
     col.label("")
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
 
     #right arm tweak
     col = row.column()
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
 
 
 
@@ -220,70 +201,53 @@ class UI(bpy.types.Panel):
     col = topRow.column()
     #right palm
     row = col.row()
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
 
     #right hand
     row = col.row()
     row.scale_y = handHeight
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
+    self.putButton(row)
 
     #right finger
     row = col.row()
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
+    self.putButton(row)
+    self.putButton(row)
+    self.putButton(row)
+    self.putButton(row)
 
 
     col = topRow.column()
     #right thigh
     col.scale_y = thighHight
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
 
     #left thigh
     col = topRow.column()
     col.scale_y = thighHight
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
 
 
     col = topRow.column()
     #left palm
     row = col.row()
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
 
     #left hand
     row = col.row()
     row.scale_y = handHeight
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
+    self.putButton(row)
 
     #right finger
     row = col.row()
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
+    self.putButton(row)
+    self.putButton(row)
+    self.putButton(row)
+    self.putButton(row)
+
 
 
     #---------------------------- shin pole target tweak------------------------------
@@ -291,51 +255,39 @@ class UI(bpy.types.Panel):
 
     #right tweak
     col = row.column()
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+
 
     #right pole target
     col = row.column()
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
 
     #right shin
     col = row.column()
     col.scale_y = thighHight
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
 
     #left shin
     col = row.column()
     col.scale_y = thighHight
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
 
     #right pole target
     col = row.column()
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
 
     #left tweak
     col = row.column()
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+    self.putButton(col)
+
 
 
 
@@ -346,17 +298,13 @@ class UI(bpy.types.Panel):
     row = col.row()
     row.scale_y = footHeight
     row.label("")
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
+    self.putButton(row)
 
 
     #left foot
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
+    self.putButton(row)
 
     row.label("")
 
@@ -366,22 +314,18 @@ class UI(bpy.types.Panel):
 
     #right toe
     row = col.row()
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
+    self.putButton(row)
 
     #left toe
-    row.operator(metarigOperatorNames[count])
-    count += 1
-    row.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(row)
+    self.putButton(row)
+
 
     #------------------------------root-------------------------------
     col = l.column()
     col.separator()
-    col.operator(metarigOperatorNames[count])
-    count += 1
+    self.putButton(col)
 
 
 
