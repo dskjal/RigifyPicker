@@ -72,14 +72,16 @@ metarigBoneNames = ["head",
                     "foot.ik.R", "foot.fk.R", "foot.fk.L", "foot.ik.L",
                     "toe.R", "foot_roll.ik.R", "foot_roll.ik.L", "toe.L",
                     "root"
-
 ]
 
-#pitchipoyBoneNames = metarigBoneNames
+pitchipoyBoneNames = ["head", "tweak_spine.005", "neck", "tweak_spine.004", "chest"
+]
 
 #generate buttons
 generatedButtonCode = ""
 for i in metarigBoneNames:
+    generatedButtonCode += createButton(i)
+for i in pitchipoyBoneNames:
     generatedButtonCode += createButton(i)
 exec(generatedButtonCode)
 
@@ -87,6 +89,10 @@ exec(generatedButtonCode)
 metarigOperatorNames = []
 for name in metarigBoneNames:
     metarigOperatorNames.append(boneNameToOperatorName(name))
+
+pitchipoyOperatorNames = []
+for name in pitchipoyBoneNames:
+    pitchipoyOperatorNames.append(boneNameToOperatorName(name))
 
 #---------------------------------------- UI --------------------------------------------------
 class UI(bpy.types.Panel):
@@ -100,13 +106,16 @@ class UI(bpy.types.Panel):
           return 1
   
   count = 0
-  def putButton(self, layout):
-      layout.operator(metarigOperatorNames[self.count])
+  def putButton(self, layout, icon='NONE'):
+      table = pitchipoyOperatorNames if isPitchipoy() else metarigOperatorNames
+      if icon == 'WIRE':
+        layout.operator(table[self.count], icon=icon, text="")
+      else:
+        layout.operator(table[self.count], icon=icon)
       self.count += 1
 
   def draw(self, context):
     bodyScale = 1.5
-    armWidth = 0.3
     thighHight = 6
     footHeight = 2
     handHeight = 2
@@ -114,218 +123,237 @@ class UI(bpy.types.Panel):
     l = self.layout
     self.count = 0
 
-    #head neck
-    row = l.row()
+    if isPitchipoy():
+        #head neck chest
+        row = l.row()
 
-    row.label("")
-    row.label("")
+        row.label("")
+        row.label("")
 
-    row.scale_x = 6
-    col = row.column()
-    col.scale_y = 2
-    self.putButton(col)
-    self.putButton(col)
+        col = row.column()
+        col.scale_y = 1.5
+        self.putButton(col)
+        subrow = col.row()
+        self.putButton(subrow, 'WIRE')
+        self.putButton(col)
+        subrow = col.row()
+        self.putButton(subrow, 'WIRE')
+        self.putButton(col)
 
-    row.label("")
-    row.label("")
+        row.label("")
+        row.label("")
+    else:
+        #head neck
+        row = l.row()
 
+        row.label("")
+        row.label("")
 
-    #shoulder
-    row = l.row()
-    row.label("")
-    self.putButton(row)
-    self.putButton(row)
-    row.label("")
+        col = row.column()
+        col.scale_y = 2
+        self.putButton(col)
+        self.putButton(col)
 
-
-    #---------------------------arm torso elbow tweak----------------------------------
-    row = l.row()
-
-    #right arm tweak
-    col = row.column()
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
-
-    #elbow pole target right
-    col = row.column()
-    col.label("")
-    col.label("")
-    self.putButton(col)
-
-    #right arm
-    col = row.column()
-    col.scale_y = bodyScale*2
-    col.scale_x = armWidth
-    self.putButton(col)
-    self.putButton(col)
-
-    #body
-    col = row.column()
-    col.scale_x = 0.5
-    col.scale_y = bodyScale
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
+        row.label("")
+        row.label("")
 
 
-    #left arm
-    col = row.column()
-    col.scale_y = bodyScale*2
-    col.scale_x = armWidth
-    self.putButton(col)
-    self.putButton(col)
-
-    #elbow pole target left
-    col = row.column()
-    col.label("")
-    col.label("")
-    self.putButton(col)
-
-    #right arm tweak
-    col = row.column()
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
+        #shoulder
+        row = l.row()
+        row.label("")
+        self.putButton(row)
+        self.putButton(row)
+        row.label("")
 
 
+        #---------------------------arm torso elbow tweak----------------------------------
+        row = l.row()
 
-    #--------------------thigh hand ik/fk finger----------------------------
-    topRow = l.row()
+        #right arm tweak
+        col = row.column()
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
 
-    col = topRow.column()
-    #right palm
-    row = col.row()
-    self.putButton(row)
+        #elbow pole target right
+        col = row.column()
+        col.label("")
+        col.label("")
+        self.putButton(col,'WIRE')
 
-    #right hand
-    row = col.row()
-    row.scale_y = handHeight
-    self.putButton(row)
-    self.putButton(row)
+        #right arm
+        col = row.column()
+        col.scale_y = bodyScale*2
+        self.putButton(col)
+        self.putButton(col)
 
-    #right finger
-    row = col.row()
-    self.putButton(row)
-    self.putButton(row)
-    self.putButton(row)
-    self.putButton(row)
-    self.putButton(row)
+        #body
+        col = row.column()
+        col.scale_y = bodyScale
+        self.putButton(col)
+        self.putButton(col)
+        self.putButton(col)
+        self.putButton(col)
 
+        #left arm
+        col = row.column()
+        col.scale_y = bodyScale*2
+        self.putButton(col)
+        self.putButton(col)
 
-    col = topRow.column()
-    #right thigh
-    col.scale_y = thighHight
-    self.putButton(col)
+        #elbow pole target left
+        col = row.column()
+        col.label("")
+        col.label("")
+        self.putButton(col,'WIRE')
 
-    #left thigh
-    col = topRow.column()
-    col.scale_y = thighHight
-    self.putButton(col)
-
-
-    col = topRow.column()
-    #left palm
-    row = col.row()
-    self.putButton(row)
-
-    #left hand
-    row = col.row()
-    row.scale_y = handHeight
-    self.putButton(row)
-    self.putButton(row)
-
-    #right finger
-    row = col.row()
-    self.putButton(row)
-    self.putButton(row)
-    self.putButton(row)
-    self.putButton(row)
-    self.putButton(row)
+        #right arm tweak
+        col = row.column()
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
 
 
 
-    #---------------------------- shin pole target tweak------------------------------
-    row = l.row()
+        #--------------------thigh hand ik/fk finger----------------------------
+        topRow = l.row()
 
-    #right tweak
-    col = row.column()
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
+        col = topRow.column()
+        #right palm
+        row = col.row()
+        self.putButton(row)
 
+        #right hand
+        row = col.row()
+        row.scale_y = handHeight
+        self.putButton(row)
+        self.putButton(row)
 
-    #right pole target
-    col = row.column()
-    self.putButton(col)
-
-    #right shin
-    col = row.column()
-    col.scale_y = thighHight
-    self.putButton(col)
-
-    #left shin
-    col = row.column()
-    col.scale_y = thighHight
-    self.putButton(col)
-
-    #right pole target
-    col = row.column()
-    self.putButton(col)
-
-    #left tweak
-    col = row.column()
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
-    self.putButton(col)
+        #right finger
+        row = col.row()
+        self.putButton(row)
+        self.putButton(row)
+        self.putButton(row)
+        self.putButton(row)
+        self.putButton(row)
 
 
+        col = topRow.column()
+        #right thigh
+        col.scale_y = thighHight
+        self.putButton(col)
+
+        #left thigh
+        col = topRow.column()
+        col.scale_y = thighHight
+        self.putButton(col)
 
 
-    #-----------------------------foot ik/fk--------------------------------
-    col = l.column()
+        col = topRow.column()
+        #left palm
+        row = col.row()
+        self.putButton(row)
 
-    #right foot
-    row = col.row()
-    row.scale_y = footHeight
-    row.label("")
-    self.putButton(row)
-    self.putButton(row)
+        #left hand
+        row = col.row()
+        row.scale_y = handHeight
+        self.putButton(row)
+        self.putButton(row)
 
-
-    #left foot
-    self.putButton(row)
-    self.putButton(row)
-
-    row.label("")
-
-
-    #------------------------------toe foot roll-----------------------
-    col = l.column()
-
-    #right toe
-    row = col.row()
-    self.putButton(row)
-    self.putButton(row)
-
-    #left toe
-    self.putButton(row)
-    self.putButton(row)
+        #right finger
+        row = col.row()
+        self.putButton(row)
+        self.putButton(row)
+        self.putButton(row)
+        self.putButton(row)
+        self.putButton(row)
 
 
-    #------------------------------root-------------------------------
-    col = l.column()
-    col.separator()
-    self.putButton(col)
+
+        #---------------------------- shin pole target tweak------------------------------
+        row = l.row()
+
+        #right tweak
+        col = row.column()
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+
+        row.separator()
+        row.separator()
+
+        #right pole target
+        col = row.column()
+        self.putButton(col,'WIRE')
+
+        #right shin
+        col = row.column()
+        col.scale_y = thighHight
+        self.putButton(col)
+
+        #left shin
+        col = row.column()
+        col.scale_y = thighHight
+        self.putButton(col)
+
+        #right pole target
+        col = row.column()
+        self.putButton(col,'WIRE')
+
+        row.separator()
+        row.separator()
+
+        #left tweak
+        col = row.column()
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+        self.putButton(col,'WIRE')
+
+
+
+        #-----------------------------foot ik/fk--------------------------------
+        col = l.column()
+
+        #right foot
+        row = col.row()
+        row.scale_y = footHeight
+        row.label("")
+        self.putButton(row)
+        self.putButton(row)
+
+
+        #left foot
+        self.putButton(row)
+        self.putButton(row)
+
+        row.label("")
+
+
+        #------------------------------toe foot roll-----------------------
+        col = l.column()
+
+        #right toe
+        row = col.row()
+        self.putButton(row)
+        self.putButton(row)
+
+        #left toe
+        self.putButton(row)
+        self.putButton(row)
+
+
+        #------------------------------root-------------------------------
+        col = l.column()
+        col.separator()
+        self.putButton(col)
 
 
 
