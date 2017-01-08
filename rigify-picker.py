@@ -44,7 +44,36 @@ def createButton(name):
     code +='  bl_label = "'+name+'"\n'
     code +='  def execute(self, context):\n'
     code +='    bpy.ops.pose.select_all(action="DESELECT")\n'
-    code +='    bpy.data.objects[context.active_object.name].data.bones["'+name+'"].select = True\n'
+    code +='    o = bpy.data.objects[context.active_object.name]\n'
+    code +='    o.data.bones["'+name+'"].select = True\n'
+
+    #auto ik/fk switch
+    code +='    if not context.active_object.is_auto_ikfk_snap:\n'
+    code +='      return {"FINISHED"}\n'
+    ikfkHeader = '    if isPitchipoy():\n      print("p")\n    else:\n'
+    lr = name[-2:]
+    if name.find('ik') != -1:
+        code += '    if isPitchipoy():\n'
+        if name.find('elbow') != -1 or name.find('hand') != -1 or name.find('arm') != -1:
+            code +='      o.pose.bones["MCH-upper_arm_parent'+lr+'"]["IK/FK"] = 0\n'
+            code +='    else:\n'
+            code +='      o.pose.bones["hand.ik'+lr+'"]["ikfk_switch"] = 1\n'
+        else:
+            code +='      o.pose.bones["MCH-thigh_parent'+lr+'"]["IK/FK"] = 0\n'
+            code +='    else:\n'
+            code +='      o.pose.bones["foot.ik'+lr+'"]["ikfk_switch"] = 1\n'
+
+    elif name.find('fk') != -1:
+        code += '    if isPitchipoy():\n'
+        if name.find('arm') != -1 or name.find('hand') != -1:
+            code +='      o.pose.bones["MCH-upper_arm_parent'+lr+'"]["IK/FK"] = 1\n'
+            code +='    else:\n'
+            code +='      o.pose.bones["hand.ik'+lr+'"]["ikfk_switch"] = 0\n'
+        else:
+            code +='      o.pose.bones["MCH-thigh_parent'+lr+'"]["IK/FK"] = 1\n'
+            code +='    else:\n'
+            code +='      o.pose.bones["foot.ik'+lr+'"]["ikfk_switch"] = 0\n'
+
     code +='    return{"FINISHED"}\n\n'
     return code
 
@@ -127,6 +156,8 @@ class UI(bpy.types.Panel):
   bl_space_type = "VIEW_3D"
   bl_region_type = "UI"
 
+  bpy.types.Object.is_auto_ikfk_snap = bpy.props.BoolProperty(name="",default=True)
+
   @classmethod
   def poll(self, context):
       if context.object and context.object.type == 'ARMATURE' and context.active_object and context.active_object.mode == 'POSE':
@@ -145,12 +176,15 @@ class UI(bpy.types.Panel):
       self.count += 1
 
   def draw(self, context):
+    l = self.layout
+    #draw auto ik/fk checkbox
+    l.prop(context.active_object, "is_auto_ikfk_snap", text="IK/FK Auto Select Enable")
+
     bodyScale = 1.5
     thighHight = 6
     footHeight = 2
     handHeight = 2
 
-    l = self.layout
     self.count = 0
 
     if isPitchipoy():
