@@ -48,9 +48,8 @@ def createButton(name):
     code +='    o.data.bones["'+name+'"].select = True\n'
 
     #auto ik/fk switch
-    code +='    if not context.active_object.is_auto_ikfk_snap:\n'
+    code +='    if not context.active_object.is_auto_ikfk_select:\n'
     code +='      return {"FINISHED"}\n'
-    ikfkHeader = '    if isPitchipoy():\n      print("p")\n    else:\n'
     lr = name[-2:]
     if name.find('ik') != -1:
         code += '    if isPitchipoy():\n'
@@ -156,7 +155,7 @@ class UI(bpy.types.Panel):
   bl_space_type = "VIEW_3D"
   bl_region_type = "UI"
 
-  bpy.types.Object.is_auto_ikfk_snap = bpy.props.BoolProperty(name="",default=True)
+  bpy.types.Object.is_auto_ikfk_select = bpy.props.BoolProperty(name="",default=True)
 
   @classmethod
   def poll(self, context):
@@ -177,6 +176,7 @@ class UI(bpy.types.Panel):
 
   def draw(self, context):
     l = self.layout
+
     #draw auto ik/fk checkbox
     l.prop(context.active_object, "is_auto_ikfk_snap", text="IK/FK Auto Select Enable")
 
