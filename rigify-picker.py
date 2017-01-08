@@ -178,7 +178,7 @@ class UI(bpy.types.Panel):
     l = self.layout
 
     #draw auto ik/fk checkbox
-    l.prop(context.active_object, "is_auto_ikfk_snap", text="IK/FK Auto Select Enable")
+    l.prop(context.active_object, "is_auto_ikfk_select", text="IK/FK Auto Select Enable")
 
     bodyScale = 1.5
     thighHight = 6
