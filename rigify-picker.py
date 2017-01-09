@@ -149,7 +149,7 @@ pitchipoyBoneNames = ["head", "tweak_spine.005", "neck", "tweak_spine.004", "che
                       "f_middle.01.R", "f_middle.02.R", "f_middle.03.R",#40
                       "f_index.01.R", "f_index.02.R", "f_index.03.R",#43
                       "thumb.01.R", "thumb.02.R", "thumb.03.R",#46
-                      "hips", "torso",#48
+                      "torso", "hips",#48
                       "palm.L", "hand_fk.L", "hand_ik.L",#51
                       "thumb.01.L", "thumb.02.L", "thumb.03.L",#54
                       "f_index.01.L", "f_index.02.L", "f_index.03.L",#57
