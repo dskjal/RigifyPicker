@@ -204,11 +204,11 @@ metarigAllPropertyNames = [("head",["isolate", "neck_follow"]), ("torso", ["pivo
                            ("thigh.fk.L",["isolate", "stretch_length"]), ("foot.ik.L",["ikfk_switch", "stretch_length", "auto_stretch"]), ("knee_target.ik.L",["follow"]), ("knee_hose.L",["smooth_bend"])
                            ]
 pitchipoyAllPropertyNames = [("torso",["head_follow", "neck_follow"]),
-                             ("MCH-upper_arm_parent.R",["IK/FK", "FK_limb_follow", "IK_Strertch"]), ("upper_arm_tweak.R.001", ["rubber_tweak"]), ("forearm_tweak.R", ["rubber_tweak"]), ("forearm_tweak.R",["rubber_tweak"]),
-                             ("MCH-upper_arm_parent.L",["IK/FK", "FK_limb_follow", "IK_Strertch"]), ("upper_arm_tweak.L.001", ["rubber_tweak"]), ("forearm_tweak.L", ["rubber_tweak"]), ("forearm_tweak.L",["rubber_tweak"]),
+                             ("MCH-upper_arm_parent.R",["IK/FK", "FK_limb_follow", "IK_Strertch"]), ("upper_arm_tweak.R.001", ["rubber_tweak"]), ("forearm_tweak.R", ["rubber_tweak"]), ("forearm_tweak.R.001", ["rubber_tweak"]), ("forearm_tweak.R",["rubber_tweak"]),
+                             ("MCH-upper_arm_parent.L",["IK/FK", "FK_limb_follow", "IK_Strertch"]), ("upper_arm_tweak.L.001", ["rubber_tweak"]), ("forearm_tweak.L", ["rubber_tweak"]), ("forearm_tweak.L.001", ["rubber_tweak"]), ("forearm_tweak.L",["rubber_tweak"]),
                              ("MCH-thigh_parent.R",["IK/FK", "FK_limb_follow", "IK_Strertch"]), ("thigh_tweak.R.001", ["rubber_tweak"]), ("shin_tweak.R", ["rubber_tweak"]), ("shin_tweak.R.001",["rubber_tweak"]),
                              ("MCH-thigh_parent.L",["IK/FK", "FK_limb_follow", "IK_Strertch"]), ("thigh_tweak.L.001", ["rubber_tweak"]), ("shin_tweak.L", ["rubber_tweak"]), ("shin_tweak.L.001",["rubber_tweak"]),
-                             ]
+                             ("jaw_master", ["mouth_lock"]), ("eyes", ["eyes_follow"])]
 
 #generate buttons
 generatedButtonCode = ""
