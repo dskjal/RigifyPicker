@@ -17,5 +17,5 @@ Metarig and Pitchipoy body is supported.
 Add your extra bone names to metarigAllBoneNames or pitchipoyAllBoneNames.
 
 ```python:rigify-picker.py
-metarigAllBoneNames   = generateFingerList(".R") + generateFingerList(".L") + metarigBoneNames + ["my_bone1", "my_bone2"]
+metarigAllBoneNames = generateFingerList(".R") + generateFingerList(".L") + metarigBoneNames + ["my_bone1", "my_bone2"]
 ```
