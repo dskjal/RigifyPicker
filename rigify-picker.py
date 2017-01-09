@@ -88,13 +88,36 @@ def createSelectPartsButton(name):
 
     return code
 
+def createKeyframeAllButton(name,properties):
+    code = 'class '+boneNameToClassName(name)+'Button(bpy.types.Operator):\n'
+    code +='  bl_idname = boneNameToOperatorName("'+name+'")\n'
+    code +='  bl_label = "'+name+'"\n'
+    code +='  def execute(self, context):\n'
+    code +='    for boneName in '+name+':\n'
+    code +='      b = bpy.context.active_object.pose.bones[boneName]\n'
+    code +='      b.keyframe_insert(data_path="location",group=boneName)\n'
+    code +='      if b.rotation_mode == "QUATERNION":\n'
+    code +='        b.keyframe_insert(data_path="rotation_quaternion",group=boneName)\n'
+    code +='      elif b.rotation_mode == "AXIS_ANGLE":\n'
+    code +='        b.keyframe_insert(data_path="rotation_axis_angle",group=boneName)\n'
+    code +='      else:\n'
+    code +='        b.keyframe_insert(data_path="rotation_euler",group=boneName)\n'
+    code +='      b.keyframe_insert(data_path="scale",group=boneName)\n'
+    code +='    for boneName, props in '+properties+':\n'
+    code +='      for p in props:\n'
+    code +='        path = \'pose.bones["\' + boneName + \'"]["\' + p + \'"]\'\n'
+    code +='        context.active_object.pose.bones[boneName].id_data.keyframe_insert(data_path=path)\n'
+    code +='    return{"FINISHED"}\n'
+    return code
+
+
 def isPitchipoy():
     try:
         return bpy.context.active_object.data.bones['tweak_spine.005'] != None
     except:
         return False
 
-#---------------------------------------- Button Generator ----------------------------------------------------
+#---------------------------------------- Button Generator (Update if Rigify updated) ----------------------------------------------------
 metarigBoneNames = ["head",
                     "neck",
                     "shoulder.R", "shoulder.L", #3
@@ -171,6 +194,22 @@ pitchipoyLegRNames = pitchipoyBoneNames[67:75] + pitchipoyBoneNames[83:85] + pit
 pitchipoyLegLNames = pitchipoyBoneNames[75:83] + pitchipoyBoneNames[85:87] + pitchipoyBoneNames[89:91]
 
 
+#for keyframe
+metarigAllBoneNames   = generateFingerList(".R") + generateFingerList(".L") + metarigBoneNames
+pitchipoyAllBoneNames = generateFingerList(".R", isPitchipoy=True) + generateFingerList(".L", isPitchipoy=True) + pitchipoyBoneNames
+metarigAllPropertyNames = [("head",["isolate", "neck_follow"]), ("torso", ["pivot_slide"]), ("spine",["auto_rotate"]),
+                           ("upper_arm.fk.R", ["isolate","stretch_length"]), ("hand.ik.R",["ikfk_switch", "stretch_length", "auto_stretch"]), ("elbow_target.ik.R",["follow"]), ("elbow_hose.R",["smooth_bend"]),
+                           ("upper_arm.fk.L", ["isolate","stretch_length"]), ("hand.ik.L",["ikfk_switch", "stretch_length", "auto_stretch"]), ("elbow_target.ik.L",["follow"]), ("elbow_hose.L",["smooth_bend"]),
+                           ("thigh.fk.R",["isolate", "stretch_length"]), ("foot.ik.R",["ikfk_switch", "stretch_length", "auto_stretch"]), ("knee_target.ik.R",["follow"]), ("knee_hose.R",["smooth_bend"]),
+                           ("thigh.fk.L",["isolate", "stretch_length"]), ("foot.ik.L",["ikfk_switch", "stretch_length", "auto_stretch"]), ("knee_target.ik.L",["follow"]), ("knee_hose.L",["smooth_bend"])
+                           ]
+pitchipoyAllPropertyNames = [("torso",["head_follow", "neck_follow"]),
+                             ("MCH-upper_arm_parent.R",["IK/FK", "FK_limb_follow", "IK_Strertch"]), ("upper_arm_tweak.R.001", ["rubber_tweak"]), ("forearm_tweak.R", ["rubber_tweak"]), ("forearm_tweak.R",["rubber_tweak"]),
+                             ("MCH-upper_arm_parent.L",["IK/FK", "FK_limb_follow", "IK_Strertch"]), ("upper_arm_tweak.L.001", ["rubber_tweak"]), ("forearm_tweak.L", ["rubber_tweak"]), ("forearm_tweak.L",["rubber_tweak"]),
+                             ("MCH-thigh_parent.R",["IK/FK", "FK_limb_follow", "IK_Strertch"]), ("thigh_tweak.R.001", ["rubber_tweak"]), ("shin_tweak.R", ["rubber_tweak"]), ("shin_tweak.R.001",["rubber_tweak"]),
+                             ("MCH-thigh_parent.L",["IK/FK", "FK_limb_follow", "IK_Strertch"]), ("thigh_tweak.L.001", ["rubber_tweak"]), ("shin_tweak.L", ["rubber_tweak"]), ("shin_tweak.L.001",["rubber_tweak"]),
+                             ]
+
 #generate buttons
 generatedButtonCode = ""
 for i in metarigBoneNames:
@@ -189,6 +228,9 @@ exec(createSelectPartsButton("pitchipoyArmLNames"))
 exec(createSelectPartsButton("pitchipoyLegRNames"))
 exec(createSelectPartsButton("pitchipoyLegLNames"))
 
+#generate keyframe all buttons
+exec(createKeyframeAllButton("metarigAllBoneNames", "metarigAllPropertyNames"))
+exec(createKeyframeAllButton("pitchipoyAllBoneNames", "pitchipoyAllPropertyNames"))
 
 
 #cache operator names for performance
@@ -236,6 +278,7 @@ class UI(bpy.types.Panel):
     thighHight = 6
     footHeight = 2
     handHeight = 2
+    keyframeHeight = 2
 
     self.count = 0
 
@@ -370,7 +413,6 @@ class UI(bpy.types.Panel):
         self.putButton(subcol,text='T')
         self.putButton(subcol,text='T')
 
-
         #hip torso
         col = row.column()
         col.scale_y = 3
@@ -478,9 +520,19 @@ class UI(bpy.types.Panel):
         col.separator()
         self.putButton(col)
 
-#-------------------------------------------------------------------------------------------
+        #------------------------------------keyframe all--------------------------------
+        col = l.column()
+        col.separator()
+        col.separator()
+        row = col.row()
+        row.scale_y = keyframeHeight
+        row.label("")
+        row.operator(boneNameToOperatorName("pitchipoyAllBoneNames"), text='KEY ALL')
+        row.label("")
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------
 # metarig
-#-------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------------------------------------
     else:
         #head neck
         row = l.row()
@@ -562,8 +614,6 @@ class UI(bpy.types.Panel):
         self.putButton(col,'WIRE')
         self.putButton(col,'WIRE')
 
-
-
         #--------------------thigh hand ik/fk finger----------------------------
         topRow = l.row()
 
@@ -617,8 +667,6 @@ class UI(bpy.types.Panel):
         self.putButton(row,text='R')
         self.putButton(row,text='P')
 
-
-
         #---------------------------- shin pole target tweak------------------------------
         row = l.row()
 
@@ -664,8 +712,6 @@ class UI(bpy.types.Panel):
 
         row.operator(boneNameToOperatorName("metarigLegLNames"), icon='TRIA_LEFT', text='ALL')
 
-
-
         #-----------------------------foot ik/fk--------------------------------
         col = l.column()
 
@@ -699,7 +745,15 @@ class UI(bpy.types.Panel):
         col.separator()
         self.putButton(col)
 
-
+        #------------------------------------keyframe all--------------------------------
+        col = l.column()
+        col.separator()
+        col.separator()
+        row = col.row()
+        row.scale_y = keyframeHeight
+        row.label("")
+        row.operator(boneNameToOperatorName("metarigAllBoneNames"), text='KEY ALL')
+        row.label("")
 
 
 #------------------------------------------- Register functions -------------------------------------------------
