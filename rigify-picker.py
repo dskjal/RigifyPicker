@@ -527,7 +527,7 @@ class UI(bpy.types.Panel):
         row = col.row()
         row.scale_y = keyframeHeight
         row.label("")
-        row.operator(boneNameToOperatorName("pitchipoyAllBoneNames"), text='KEY ALL')
+        row.operator(boneNameToOperatorName("pitchipoyAllBoneNames"), text='KEYFRAME ALL')
         row.label("")
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -752,7 +752,7 @@ class UI(bpy.types.Panel):
         row = col.row()
         row.scale_y = keyframeHeight
         row.label("")
-        row.operator(boneNameToOperatorName("metarigAllBoneNames"), text='KEY ALL')
+        row.operator(boneNameToOperatorName("metarigAllBoneNames"), text='KEYFRAME ALL')
         row.label("")
 
 
