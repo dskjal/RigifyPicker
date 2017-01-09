@@ -20,7 +20,7 @@ import bpy
 bl_info = {
     "name": "Rigify Picker",
     "author": "dskjal",
-    "version": (1, 0),
+    "version": (2, 0),
     "blender": (2, 78, 0),
     "location": "Properties Shelf",
     "description": "Rigify Picker",
@@ -76,61 +76,100 @@ def createButton(name):
     code +='    return{"FINISHED"}\n\n'
     return code
 
+def createSelectPartsButton(name):
+    code = 'class '+boneNameToClassName(name)+'Button(bpy.types.Operator):\n'
+    code +='  bl_idname = boneNameToOperatorName("'+name+'")\n'
+    code +='  bl_label = "'+name+'"\n'
+    code +='  def execute(self, context):\n'
+    code +='    bpy.ops.pose.select_all(action="DESELECT")\n'
+    code +='    for boneName in '+name+':\n'
+    code +='      context.active_object.data.bones[boneName].select = True\n'
+    code +='    return{"FINISHED"}\n'
+
+    return code
+
 def isPitchipoy():
     try:
         return bpy.context.active_object.data.bones['tweak_spine.005'] != None
     except:
         return False
 
-
 #---------------------------------------- Button Generator ----------------------------------------------------
 metarigBoneNames = ["head",
                     "neck",
-                    "shoulder.R", "shoulder.L", 
-                    "upper_arm_hose_end.R", "upper_arm_hose.R", "elbow_hose.R", "forearm_hose.R", "forearm_hose_end.R",
-                    "elbow_target.ik.R", "upper_arm.fk.R", "forearm.fk.R", "chest", "spine", "torso", "hips", "upper_arm.fk.L", "forearm.fk.L", "elbow_target.ik.L",
-                    "upper_arm_hose_end.L", "upper_arm_hose.L", "elbow_hose.L", "forearm_hose.L", "forearm_hose_end.L",
-                    "palm.R", "hand.ik.R", "hand.fk.R",
-                    "f_pinky.R", "f_ring.R", "f_middle.R", "f_index.R", "thumb.R",
-                    "thigh.fk.R", "thigh.fk.L", "palm.L", "hand.fk.L", "hand.ik.L",
-                    "thumb.L", "f_index.L", "f_middle.L", "f_ring.L", "f_pinky.L",
-                    "thigh_hose_end.R", "thigh_hose.R", "knee_hose.R", "shin_hose.R", "shin_hose_end.R",
-                    "knee_target.ik.R", "shin.fk.R","shin.fk.L", "knee_target.ik.L",
-                    "thigh_hose_end.L", "thigh_hose.L", "knee_hose.L", "shin_hose.L", "shin_hose_end.L",
-                    "foot.ik.R", "foot.fk.R", "foot.fk.L", "foot.ik.L",
-                    "toe.R", "foot_roll.ik.R", "foot_roll.ik.L", "toe.L",
+                    "shoulder.R", "shoulder.L", #3
+                    "upper_arm_hose_end.R", "upper_arm_hose.R", "elbow_hose.R", "forearm_hose.R", "forearm_hose_end.R",#8
+                    "elbow_target.ik.R", "upper_arm.fk.R", "forearm.fk.R", "chest", "spine", "torso", "hips", "upper_arm.fk.L", "forearm.fk.L", "elbow_target.ik.L",#18
+                    "upper_arm_hose_end.L", "upper_arm_hose.L", "elbow_hose.L", "forearm_hose.L", "forearm_hose_end.L",#23
+                    "palm.R", "hand.ik.R", "hand.fk.R",#26
+                    "f_pinky.R", "f_ring.R", "f_middle.R", "f_index.R", "thumb.R",#31
+                    "thigh.fk.R", "thigh.fk.L", "palm.L", "hand.fk.L", "hand.ik.L",#36
+                    "thumb.L", "f_index.L", "f_middle.L", "f_ring.L", "f_pinky.L",#41
+                    "thigh_hose_end.R", "thigh_hose.R", "knee_hose.R", "shin_hose.R", "shin_hose_end.R",#46
+                    "knee_target.ik.R", "shin.fk.R", "shin.fk.L", "knee_target.ik.L",#50
+                    "thigh_hose_end.L", "thigh_hose.L", "knee_hose.L", "shin_hose.L", "shin_hose_end.L",#55
+                    "foot.ik.R", "foot.fk.R", "foot.fk.L", "foot.ik.L",#59
+                    "toe.R", "foot_roll.ik.R", "foot_roll.ik.L", "toe.L",#63
                     "root"
 ]
 
-pitchipoyBoneNames = ["head", "tweak_spine.005", "neck", "tweak_spine.004", "chest",
-                      "shoulder.R", "shoulder.L",
-                      "upper_arm_tweak.R", "upper_arm_tweak.R.001", "forearm_tweak.R", "forearm_tweak.R.001", "hand_tweak.R",
-                      "upper_arm_ik.R", "upper_arm_fk.R", "forearm_fk.R", "breast.R",
-                      "tweak_spine.003", "tweak_spine.002", "tweak_spine.001", "tweak_spine",
-                      "breast.L", "upper_arm_fk.L", "forearm_fk.L", "upper_arm_ik.L",
-                      "upper_arm_tweak.L", "upper_arm_tweak.L.001", "forearm_tweak.L", "forearm_tweak.L.001", "hand_tweak.L",
-                      "palm.R", "hand_ik.R", "hand_fk.R",
-                      "f_pinky.01.R", "f_pinky.02.R", "f_pinky.03.R",
-                      "f_ring.01.R", "f_ring.02.R", "f_ring.03.R",
-                      "f_middle.01.R", "f_middle.02.R", "f_middle.03.R",
-                      "f_index.01.R", "f_index.02.R", "f_index.03.R",
-                      "thumb.01.R", "thumb.02.R", "thumb.03.R",
-                      "hips", "torso",
-                      "palm.L", "hand_fk.L", "hand_ik.L",
-                      "thumb.01.L", "thumb.02.L", "thumb.03.L",
-                      "f_index.01.L", "f_index.02.L", "f_index.03.L",
-                      "f_middle.01.L", "f_middle.02.L", "f_middle.03.L",
-                      "f_ring.01.L", "f_ring.02.L", "f_ring.03.L",
-                      "f_pinky.01.L", "f_pinky.02.L", "f_pinky.03.L",
-                      "thigh_tweak.R", "thigh_tweak.R.001", "shin_tweak.R", "shin_tweak.R.001", "foot_tweak.R",
-                      "thigh_ik.R",
-                      "thigh_fk.R", "shin_fk.R", "thigh_fk.L", "shin_fk.L",
-                      "thigh_ik.L",
-                      "thigh_tweak.L", "thigh_tweak.L.001", "shin_tweak.L", "shin_tweak.L.001", "foot_tweak.L",
-                      "foot_ik.R", "foot_fk.R", "foot_fk.L", "foot_ik.L",
-                      "toe.R", "foot_heel_ik.R", "foot_heel_ik.L", "toe.L",
+pitchipoyBoneNames = ["head", "tweak_spine.005", "neck", "tweak_spine.004", "chest",#4
+                      "shoulder.R", "shoulder.L",#6
+                      "upper_arm_tweak.R", "upper_arm_tweak.R.001", "forearm_tweak.R", "forearm_tweak.R.001", "hand_tweak.R",#11
+                      "upper_arm_ik.R", "upper_arm_fk.R", "forearm_fk.R", "breast.R",#15
+                      "tweak_spine.003", "tweak_spine.002", "tweak_spine.001", "tweak_spine",#19
+                      "breast.L", "upper_arm_fk.L", "forearm_fk.L", "upper_arm_ik.L",#23
+                      "upper_arm_tweak.L", "upper_arm_tweak.L.001", "forearm_tweak.L", "forearm_tweak.L.001", "hand_tweak.L",#28
+                      "palm.R", "hand_ik.R", "hand_fk.R",#31
+                      "f_pinky.01.R", "f_pinky.02.R", "f_pinky.03.R",#34
+                      "f_ring.01.R", "f_ring.02.R", "f_ring.03.R",#37
+                      "f_middle.01.R", "f_middle.02.R", "f_middle.03.R",#40
+                      "f_index.01.R", "f_index.02.R", "f_index.03.R",#43
+                      "thumb.01.R", "thumb.02.R", "thumb.03.R",#46
+                      "hips", "torso",#48
+                      "palm.L", "hand_fk.L", "hand_ik.L",#51
+                      "thumb.01.L", "thumb.02.L", "thumb.03.L",#54
+                      "f_index.01.L", "f_index.02.L", "f_index.03.L",#57
+                      "f_middle.01.L", "f_middle.02.L", "f_middle.03.L",#60
+                      "f_ring.01.L", "f_ring.02.L", "f_ring.03.L",#63
+                      "f_pinky.01.L", "f_pinky.02.L", "f_pinky.03.L",#66
+                      "thigh_tweak.R", "thigh_tweak.R.001", "shin_tweak.R", "shin_tweak.R.001", "foot_tweak.R",#71
+                      "thigh_ik.R",#72
+                      "thigh_fk.R", "shin_fk.R", "thigh_fk.L", "shin_fk.L",#76
+                      "thigh_ik.L",#77
+                      "thigh_tweak.L", "thigh_tweak.L.001", "shin_tweak.L", "shin_tweak.L.001", "foot_tweak.L",#82
+                      "foot_ik.R", "foot_fk.R", "foot_fk.L", "foot_ik.L",#86
+                      "toe.R", "foot_heel_ik.R", "foot_heel_ik.L", "toe.L",#90
                       "root"
 ]
+
+#select all indices
+def generateFingerList(suffix,isPitchipoy=False):
+    out = []
+    nameList = ["thumb", "f_index", "f_middle", "f_ring", "f_pinky"]
+    numList = [".01", ".02", ".03"]
+    if isPitchipoy:
+        for name in nameList:
+            for i in numList:
+                out.append('tweak_'+name+i+suffix)
+            out.append('tweak_'+name+numList[-1]+suffix+'.001')
+    else:
+        for name in nameList:
+            for i in numList:
+                out.append(name+i+suffix)
+
+    return out
+
+metarigArmRNames = generateFingerList(".R") + metarigBoneNames[4:12] + metarigBoneNames[24:32]
+metarigArmLNames = generateFingerList(".L") + metarigBoneNames[16:24] + metarigBoneNames[34:42]
+metarigLegRNames = [metarigBoneNames[32]] + metarigBoneNames[42:49] + metarigBoneNames[56:58] + metarigBoneNames[60:62]
+metarigLegLNames = [metarigBoneNames[33]] + metarigBoneNames[49:56] + metarigBoneNames[62:64] + metarigBoneNames[58:60]
+
+pitchipoyArmRNames = generateFingerList(".R",True) + pitchipoyBoneNames[7:15] + pitchipoyBoneNames[29:47]
+pitchipoyArmLNames = generateFingerList(".L",True) + pitchipoyBoneNames[21:29] + pitchipoyBoneNames[49:67]
+pitchipoyLegRNames = pitchipoyBoneNames[67:75] + pitchipoyBoneNames[83:85] + pitchipoyBoneNames[87:89]
+pitchipoyLegLNames = pitchipoyBoneNames[75:83] + pitchipoyBoneNames[85:87] + pitchipoyBoneNames[89:91]
+
 
 #generate buttons
 generatedButtonCode = ""
@@ -139,6 +178,18 @@ for i in metarigBoneNames:
 for i in pitchipoyBoneNames:
     generatedButtonCode += createButton(i)
 exec(generatedButtonCode)
+
+#generate all select buttons
+exec(createSelectPartsButton("metarigArmRNames"))
+exec(createSelectPartsButton("metarigArmLNames"))
+exec(createSelectPartsButton("metarigLegRNames"))
+exec(createSelectPartsButton("metarigLegLNames"))
+exec(createSelectPartsButton("pitchipoyArmRNames"))
+exec(createSelectPartsButton("pitchipoyArmLNames"))
+exec(createSelectPartsButton("pitchipoyLegRNames"))
+exec(createSelectPartsButton("pitchipoyLegLNames"))
+
+
 
 #cache operator names for performance
 metarigOperatorNames = []
@@ -172,6 +223,7 @@ class UI(bpy.types.Panel):
             layout.operator(table[self.count], icon=icon, text=text)
         else:
             layout.operator(table[self.count], icon=icon)
+
       self.count += 1
 
   def draw(self, context):
@@ -217,8 +269,14 @@ class UI(bpy.types.Panel):
         #--------------------------------shoulder-----------------------------
         row = l.row()
         row.label("")
+
+        row.operator(boneNameToOperatorName("pitchipoyArmRNames"), icon='DOWNARROW_HLT', text='ALL')
+
         self.putButton(row)
         self.putButton(row)
+
+        row.operator(boneNameToOperatorName("pitchipoyArmLNames"), icon='DOWNARROW_HLT', text='ALL')
+
         row.label("")
 
         #--------------------------------arm body tweak--------------------------------
@@ -353,6 +411,8 @@ class UI(bpy.types.Panel):
         #------------------------------------legs-----------------------------
         row = l.row()
 
+        row.operator(boneNameToOperatorName("pitchipoyLegRNames"), icon='TRIA_RIGHT', text='ALL')
+
         #left tweak
         col = row.column()
         self.putButton(col,icon='WIRE')
@@ -360,8 +420,6 @@ class UI(bpy.types.Panel):
         self.putButton(col,icon='WIRE')
         self.putButton(col,icon='WIRE')
         self.putButton(col,icon='WIRE')
-
-        row.label("")
 
         #thigh ik R
         col = row.column()
@@ -387,8 +445,6 @@ class UI(bpy.types.Panel):
         col.label("")
         self.putButton(col,icon='WIRE')
 
-        row.label("")
-
         #right tweak
         col = row.column()
         self.putButton(col,icon='WIRE')
@@ -396,6 +452,8 @@ class UI(bpy.types.Panel):
         self.putButton(col,icon='WIRE')
         self.putButton(col,icon='WIRE')
         self.putButton(col,icon='WIRE')
+
+        row.operator(boneNameToOperatorName("pitchipoyLegLNames"), icon='TRIA_LEFT', text='ALL')
 
         #-----------------------------------foot ik/fk------------------------------
         row = l.row()
@@ -442,8 +500,14 @@ class UI(bpy.types.Panel):
         #shoulder
         row = l.row()
         row.label("")
+
+        row.operator(boneNameToOperatorName("metarigArmRNames"), icon='DOWNARROW_HLT', text='ALL')
+
         self.putButton(row)
         self.putButton(row)
+
+        row.operator(boneNameToOperatorName("metarigArmLNames"), icon='DOWNARROW_HLT', text='ALL')
+
         row.label("")
 
 
@@ -558,7 +622,9 @@ class UI(bpy.types.Panel):
         #---------------------------- shin pole target tweak------------------------------
         row = l.row()
 
+        row.operator(boneNameToOperatorName("metarigLegRNames"), icon='TRIA_RIGHT', text='ALL')
         #right tweak
+
         col = row.column()
         self.putButton(col,'WIRE')
         self.putButton(col,'WIRE')
@@ -566,7 +632,6 @@ class UI(bpy.types.Panel):
         self.putButton(col,'WIRE')
         self.putButton(col,'WIRE')
 
-        row.separator()
         row.separator()
 
         #right pole target
@@ -588,7 +653,6 @@ class UI(bpy.types.Panel):
         self.putButton(col,'WIRE')
 
         row.separator()
-        row.separator()
 
         #left tweak
         col = row.column()
@@ -597,6 +661,8 @@ class UI(bpy.types.Panel):
         self.putButton(col,'WIRE')
         self.putButton(col,'WIRE')
         self.putButton(col,'WIRE')
+
+        row.operator(boneNameToOperatorName("metarigLegLNames"), icon='TRIA_LEFT', text='ALL')
 
 
 
