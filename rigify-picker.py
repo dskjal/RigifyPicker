@@ -44,7 +44,7 @@ def createButton(name):
     code +='  bl_label = "'+name+'"\n'
     code +='  def execute(self, context):\n'
     code +='    bpy.ops.pose.select_all(action="DESELECT")\n'
-    code +='    o = bpy.data.objects[context.active_object.name]\n'
+    code +='    o = context.active_object\n'
     code +='    o.data.bones["'+name+'"].select = True\n'
 
     #auto ik/fk switch
@@ -165,8 +165,8 @@ metarigArmLNames = generateFingerList(".L") + metarigBoneNames[16:24] + metarigB
 metarigLegRNames = [metarigBoneNames[32]] + metarigBoneNames[42:49] + metarigBoneNames[56:58] + metarigBoneNames[60:62]
 metarigLegLNames = [metarigBoneNames[33]] + metarigBoneNames[49:56] + metarigBoneNames[62:64] + metarigBoneNames[58:60]
 
-pitchipoyArmRNames = generateFingerList(".R",True) + pitchipoyBoneNames[7:15] + pitchipoyBoneNames[29:47]
-pitchipoyArmLNames = generateFingerList(".L",True) + pitchipoyBoneNames[21:29] + pitchipoyBoneNames[49:67]
+pitchipoyArmRNames = generateFingerList(".R", isPitchipoy=True) + pitchipoyBoneNames[7:15] + pitchipoyBoneNames[29:47]
+pitchipoyArmLNames = generateFingerList(".L", isPitchipoy=True) + pitchipoyBoneNames[21:29] + pitchipoyBoneNames[49:67]
 pitchipoyLegRNames = pitchipoyBoneNames[67:75] + pitchipoyBoneNames[83:85] + pitchipoyBoneNames[87:89]
 pitchipoyLegLNames = pitchipoyBoneNames[75:83] + pitchipoyBoneNames[85:87] + pitchipoyBoneNames[89:91]
 
