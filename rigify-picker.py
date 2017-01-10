@@ -39,13 +39,13 @@ def boneNameToOperatorName(name):
     return "dskjal."+boneNameToClassName(name)
 
 def createButton(name):
-    code = 'class '+boneNameToClassName(name)+'Button(bpy.types.Operator):\n'
-    code +='  bl_idname = boneNameToOperatorName("'+name+'")\n'
-    code +='  bl_label = "'+name+'"\n'
+    code = 'class %sButton(bpy.types.Operator):\n' % (boneNameToClassName(name))
+    code +='  bl_idname = "%s"\n' % (boneNameToOperatorName(name))
+    code +='  bl_label = "%s"\n' % (name)
     code +='  def execute(self, context):\n'
     code +='    bpy.ops.pose.select_all(action="DESELECT")\n'
     code +='    o = context.active_object\n'
-    code +='    o.data.bones["'+name+'"].select = True\n'
+    code +='    o.data.bones["%s"].select = True\n' % (name)
 
     #auto ik/fk switch
     code +='    if not context.active_object.is_auto_ikfk_select:\n'
@@ -76,39 +76,41 @@ def createButton(name):
     code +='    return{"FINISHED"}\n\n'
     return code
 
-def createSelectPartsButton(name):
-    code = 'class '+boneNameToClassName(name)+'Button(bpy.types.Operator):\n'
-    code +='  bl_idname = boneNameToOperatorName("'+name+'")\n'
-    code +='  bl_label = "'+name+'"\n'
-    code +='  def execute(self, context):\n'
-    code +='    bpy.ops.pose.select_all(action="DESELECT")\n'
-    code +='    for boneName in '+name+':\n'
-    code +='      context.active_object.data.bones[boneName].select = True\n'
-    code +='    return{"FINISHED"}\n'
 
-    return code
+def createSelectPartsButton(name):
+    return '''
+class %sButton(bpy.types.Operator):
+  bl_idname = "%s"
+  bl_label = "%s"
+  def execute(self, context):
+    bpy.ops.pose.select_all(action="DESELECT")
+    for boneName in %s:
+      context.active_object.data.bones[boneName].select = True
+    return{"FINISHED"}
+''' % (boneNameToClassName(name), boneNameToOperatorName(name), name, name)
 
 def createKeyframeAllButton(name,properties):
-    code = 'class '+boneNameToClassName(name)+'Button(bpy.types.Operator):\n'
-    code +='  bl_idname = boneNameToOperatorName("'+name+'")\n'
-    code +='  bl_label = "'+name+'"\n'
-    code +='  def execute(self, context):\n'
-    code +='    for boneName in '+name+':\n'
-    code +='      b = bpy.context.active_object.pose.bones[boneName]\n'
-    code +='      b.keyframe_insert(data_path="location",group=boneName)\n'
-    code +='      if b.rotation_mode == "QUATERNION":\n'
-    code +='        b.keyframe_insert(data_path="rotation_quaternion",group=boneName)\n'
-    code +='      elif b.rotation_mode == "AXIS_ANGLE":\n'
-    code +='        b.keyframe_insert(data_path="rotation_axis_angle",group=boneName)\n'
-    code +='      else:\n'
-    code +='        b.keyframe_insert(data_path="rotation_euler",group=boneName)\n'
-    code +='      b.keyframe_insert(data_path="scale",group=boneName)\n'
-    code +='    for boneName, props in '+properties+':\n'
-    code +='      for p in props:\n'
-    code +='        path = \'pose.bones["\' + boneName + \'"]["\' + p + \'"]\'\n'
-    code +='        context.active_object.pose.bones[boneName].id_data.keyframe_insert(data_path=path)\n'
-    code +='    return{"FINISHED"}\n'
-    return code
+    return '''
+class %sButton(bpy.types.Operator):
+  bl_idname = "%s"
+  bl_label = "%s"
+  def execute(self, context):
+    for boneName in %s:
+      b = bpy.context.active_object.pose.bones[boneName]
+      b.keyframe_insert(data_path="location",group=boneName)
+      if b.rotation_mode == "QUATERNION":
+        b.keyframe_insert(data_path="rotation_quaternion",group=boneName)
+      elif b.rotation_mode == "AXIS_ANGLE":
+        b.keyframe_insert(data_path="rotation_axis_angle",group=boneName)
+      else:
+        b.keyframe_insert(data_path="rotation_euler",group=boneName)
+      b.keyframe_insert(data_path="scale",group=boneName)
+    for boneName, props in %s:
+      for p in props:
+        path = \'pose.bones["\' + boneName + \'"]["\' + p + \'"]\'
+        context.active_object.pose.bones[boneName].id_data.keyframe_insert(data_path=path)
+    return{"FINISHED"}
+''' % (boneNameToClassName(name), boneNameToOperatorName(name), name, name, properties)
 
 
 def isPitchipoy():
@@ -282,6 +284,9 @@ class UI(bpy.types.Panel):
 
     self.count = 0
 
+#-----------------------------------------------------------------------------------------------------------------------------------------------------
+# Pitchipoy
+#-----------------------------------------------------------------------------------------------------------------------------------------------------
     if isPitchipoy():
         armHeight = 2.5
 
