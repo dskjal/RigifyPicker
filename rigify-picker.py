@@ -39,42 +39,36 @@ def boneNameToOperatorName(name):
     return "dskjal."+boneNameToClassName(name)
 
 def createButton(name):
-    code = 'class %sButton(bpy.types.Operator):\n' % (boneNameToClassName(name))
-    code +='  bl_idname = "%s"\n' % (boneNameToOperatorName(name))
-    code +='  bl_label = "%s"\n' % (name)
-    code +='  def execute(self, context):\n'
-    code +='    bpy.ops.pose.select_all(action="DESELECT")\n'
-    code +='    o = context.active_object\n'
-    code +='    o.data.bones["%s"].select = True\n' % (name)
+    code = '''
+class %sButton(bpy.types.Operator):
+  bl_idname = "%s"
+  bl_label = "%s"
+  def execute(self, context):
+    bpy.ops.pose.select_all(action="DESELECT")
+    o = context.active_object
+    o.data.bones["%s"].select = True
 
     #auto ik/fk switch
-    code +='    if not context.active_object.is_auto_ikfk_select:\n'
-    code +='      return {"FINISHED"}\n'
+    if not context.active_object.is_auto_ikfk_select:
+      return {"FINISHED"}
+''' % (boneNameToClassName(name), boneNameToOperatorName(name), name, name)
+
+    if not('ik' in name or 'fk' in name):
+      return code + '    return{"FINISHED"}\n\n'
+
     lr = name[-2:]
-    if name.find('ik') != -1:
-        code += '    if isPitchipoy():\n'
-        if name.find('elbow') != -1 or name.find('hand') != -1 or name.find('arm') != -1:
-            code +='      o.pose.bones["MCH-upper_arm_parent'+lr+'"]["IK/FK"] = 0\n'
-            code +='    else:\n'
-            code +='      o.pose.bones["hand.ik'+lr+'"]["ikfk_switch"] = 1\n'
-        else:
-            code +='      o.pose.bones["MCH-thigh_parent'+lr+'"]["IK/FK"] = 0\n'
-            code +='    else:\n'
-            code +='      o.pose.bones["foot.ik'+lr+'"]["ikfk_switch"] = 1\n'
+    isFK = 1 if 'fk' in name else 0# if bone is fk, value is 1. if bone is ik, value is 0.
+    isArm = 1 if 'elbow' in name or 'hand' in name or 'arm' in name else 0#if bone is arm, value is 1.if bone is leg value is 0.
+    boneName = [['MCH-thigh_parent', 'foot'], ['MCH-upper_arm_parent', 'hand']]
 
-    elif name.find('fk') != -1:
-        code += '    if isPitchipoy():\n'
-        if name.find('arm') != -1 or name.find('hand') != -1:
-            code +='      o.pose.bones["MCH-upper_arm_parent'+lr+'"]["IK/FK"] = 1\n'
-            code +='    else:\n'
-            code +='      o.pose.bones["hand.ik'+lr+'"]["ikfk_switch"] = 0\n'
-        else:
-            code +='      o.pose.bones["MCH-thigh_parent'+lr+'"]["IK/FK"] = 1\n'
-            code +='    else:\n'
-            code +='      o.pose.bones["foot.ik'+lr+'"]["ikfk_switch"] = 0\n'
+    return code + '''
+    if isPitchipoy():
+      o.pose.bones["%s%s"]["IK/FK"] = %s
+    else:
+      o.pose.bones["%s.ik%s"]["ikfk_switch"] = %s
+    return{"FINISHED"}
 
-    code +='    return{"FINISHED"}\n\n'
-    return code
+''' % (boneName[isArm][0], lr, isFK, boneName[isArm][1], lr, 1-isFK)
 
 
 def createSelectPartsButton(name):
