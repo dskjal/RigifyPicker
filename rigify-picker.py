@@ -239,7 +239,7 @@ for name in pitchipoyBoneNames:
     pitchipoyOperatorNames.append(boneNameToOperatorName(name))
 
 #---------------------------------------- UI --------------------------------------------------
-class UI(bpy.types.Panel):
+class DskjalRigifyPicker(bpy.types.Panel):
   bl_label = "Rigify Picker"
   bl_space_type = "VIEW_3D"
   bl_region_type = "UI"
@@ -754,6 +754,302 @@ class UI(bpy.types.Panel):
         row.operator(boneNameToOperatorName("metarigAllBoneNames"), text='KEYFRAME ALL')
         row.label("")
 
+
+#--------------------------------------------------------------------------------------------------------------
+#                                         Pitchipoy Face Picker
+#--------------------------------------------------------------------------------------------------------------
+pitchipoyFaceBoneNames = ["brow.T.R.001", "brow.T.R.002", "brow.T.R.003", "brow.T.L.003", "brow.T.L.002", "brow.T.L.001",
+                          "brow.B.R", "brow.B.R.001", "brow.B.R.002", "brow.B.R.003", "brow.B.R.004", "nose", "brow.B.L.004", "brow.B.L.003", "brow.B.L.002", "brow.B.L.001", "brow.B.L",
+                          "ear.R.002", "ear.R", "ear.R.003", "brow.T.R", "jaw.R", "lid.T.R.001", "lid.T.R", "lid.B.R.003", "lid.T.R.002", "master_eye.R", "lid.B.R.002", "lid.T.R.003", "lid.B.R", "lid.B.R.001", 
+                          "eye.R", "eyes", "eye.L", 
+                          "nose.R", "nose.L",
+                          "lid.T.L.003",  "lid.B.L", "lid.B.L.001", "lid.T.L.002","master_eye.L", "lid.B.L.002", "lid.T.L.001", "lid.T.L", "lid.B.L.003", "brow.T.L", "jaw.L", "ear.L.002", "ear.L", "ear.L.003",
+                          "nose.002",
+                          "ear.R.004", "cheek.T.R.001", "nose.R.001", "nose_master", "nose.L.001", "cheek.T.L.001", "ear.L.004",
+                          "cheek.B.R.001", "teeth.T", "cheek.B.L.001",
+                          "lips.R", "lip.T.R.001", "lip.T", "lip.T.L.001", "lip.B.R.001", "lip.B", "lip.B.L.001", "lips.L",
+                          "jaw.R.001", "tongue_master", "jaw.L.001",
+                          "teeth.B",
+                          "chin.002",
+                          "chin.001",
+                          "chin.R", "chin", "chin.L",
+                          "jaw",
+                          "jaw_master",
+                          "tongue.003", "tongue.002", "tongue.001", "tongue",
+                          "nose.001", "nose.003", "nose.004", "nose.005"]
+
+#generate buttons
+for i in pitchipoyFaceBoneNames:
+    generatedButtonCode += createButton(i)
+exec(generatedButtonCode)
+
+#chache name
+pitchipoyFaceOperatorNames = []
+for name in pitchipoyFaceBoneNames:
+    pitchipoyFaceOperatorNames.append(boneNameToOperatorName(name))
+
+
+def sepN(layout, n):
+    while n > 0:
+        layout.separator()
+        n -= 1
+
+class DskjalPitchipoyFacePicker(bpy.types.Panel):
+  bl_label = "Pitchipoy Face Picker"
+  bl_space_type = "VIEW_3D"
+  bl_region_type = "UI"
+
+  @classmethod
+  def poll(self, context):
+      try:
+          return context.object.type == 'ARMATURE' and context.active_object.mode == 'POSE' and isPitchipoy()
+      except:
+          pass
+  
+  count = 0
+  def putButton(self, layout, icon='NONE', text=""):
+      table = pitchipoyFaceOperatorNames
+      if icon != 'NONE':
+        layout.operator(table[self.count], icon=icon, text="")
+      else:
+        if text != '':
+            layout.operator(table[self.count], icon=icon, text=text)
+        else:
+            layout.operator(table[self.count], icon=icon)
+
+      self.count += 1
+
+  def draw(self, context):
+    secondaryIcon = 'LAYER_ACTIVE'
+    primaryIcon = 'CHECKBOX_DEHLT'
+    l = self.layout
+    #----------------------------------------- brow --------------------------------------
+    row = l.row()
+    sepN(row, 3)
+    self.putButton(row, icon=primaryIcon)
+    self.putButton(row, icon=primaryIcon)
+    self.putButton(row, icon=primaryIcon)
+    row.label("")
+    self.putButton(row, icon=primaryIcon)
+    self.putButton(row, icon=primaryIcon)
+    self.putButton(row, icon=primaryIcon)
+    sepN(row, 3)
+
+    #brow secondary
+    row = l.row()
+    row.alignment = 'CENTER'
+    self.putButton(row, icon=secondaryIcon)
+    self.putButton(row, icon=secondaryIcon)
+    self.putButton(row, icon=secondaryIcon)
+    self.putButton(row, icon=secondaryIcon)
+    self.putButton(row, icon=secondaryIcon)
+
+    #nose
+    sepN(row,2)
+    self.putButton(row, icon=secondaryIcon)
+    sepN(row,2)
+
+    self.putButton(row, icon=secondaryIcon)
+    self.putButton(row, icon=secondaryIcon)
+    self.putButton(row, icon=secondaryIcon)
+    self.putButton(row, icon=secondaryIcon)
+    self.putButton(row, icon=secondaryIcon)
+
+    #----------------------------------------- eye ear -----------------------------------
+    row = l.row()
+    col = row.column()
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon='MESH_CIRCLE')#ear.R
+    self.putButton(col, icon=secondaryIcon)
+
+    #jaw brow secondary
+    col = row.column()
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon=secondaryIcon)
+
+    #left eye
+    col = row.column()
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon=secondaryIcon)
+
+    col = row.column()
+    self.putButton(col, icon=primaryIcon)
+    self.putButton(col, icon='VISIBLE_IPO_ON')#master_eye
+    self.putButton(col, icon=primaryIcon)
+
+    col = row.column()
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon=secondaryIcon)
+
+    #eyes
+    col = row.column()
+    col.scale_x = 3
+    col.separator()
+    col.separator()
+    box = col.box()
+    boxrow = box.row()
+    self.putButton(boxrow, icon='MESH_CIRCLE')
+    self.putButton(boxrow)#eyes
+    self.putButton(boxrow, icon='MESH_CIRCLE')
+        
+    #nose secondary
+    subrow = col.row()
+    subrow.alignment='CENTER'
+    self.putButton(subrow, icon=secondaryIcon)
+    sepN(subrow,2)
+    self.putButton(subrow, icon=secondaryIcon)
+
+
+    #right eye
+    col = row.column()
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon=secondaryIcon)
+
+    col = row.column()
+    self.putButton(col, icon=primaryIcon)
+    self.putButton(col, icon='VISIBLE_IPO_ON')#master_eye
+    self.putButton(col, icon=primaryIcon)
+
+    col = row.column()
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon=secondaryIcon)
+
+    #jaw brow secondary
+    col = row.column()
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon=secondaryIcon)
+
+    col = row.column()
+    self.putButton(col, icon=secondaryIcon)
+    self.putButton(col, icon='MESH_CIRCLE')#ear.L
+    self.putButton(col, icon=secondaryIcon)
+
+    #---------------------------------------------nose------------------------------------
+    row = l.row()
+
+    #nose.001
+    row.label("")
+    col = row.column()
+    col.alignment = 'CENTER'
+    self.putButton(col, icon = primaryIcon)
+    row.label("")
+
+    row = l.row()
+
+    self.putButton(row, icon=secondaryIcon)
+    sepN(row,2)
+    self.putButton(row, icon=secondaryIcon)
+    sepN(row,2)
+
+    self.putButton(row, icon = primaryIcon)
+    self.putButton(row)#nose_master
+    self.putButton(row, icon = primaryIcon)
+
+    sepN(row,2)
+    self.putButton(row, icon=secondaryIcon)
+    sepN(row,2)
+    self.putButton(row, icon=secondaryIcon)
+
+
+
+    #---------------------------------------------mouse-----------------------------------
+    row = l.row()
+    col = row.column()
+
+    subrow = col.row()
+    self.putButton(subrow, icon = primaryIcon)
+    self.putButton(subrow)#teeth.T
+    self.putButton(subrow, icon = primaryIcon)
+
+    #---------------------------------------------lips----------------------------------------
+    row = l.row()
+
+    sepN(row,6)
+
+    col = row.column()
+    col.separator()
+    subrow = col.row()
+    subrow.alignment = 'RIGHT'
+    self.putButton(subrow, icon = primaryIcon)
+
+    col = row.column()
+    subrow = col.row()
+    subrow.alignment = 'CENTER'
+    self.putButton(subrow, icon = primaryIcon)
+    self.putButton(subrow, icon = primaryIcon)
+    self.putButton(subrow, icon = primaryIcon)
+    subrow = col.row()
+    subrow.alignment = 'CENTER'
+    self.putButton(subrow, icon = primaryIcon)
+    self.putButton(subrow, icon = primaryIcon)
+    self.putButton(subrow, icon = primaryIcon)
+
+    col = row.column()
+    col.separator()
+    subrow = col.row()
+    subrow.alignment = 'LEFT'
+    self.putButton(subrow, icon = primaryIcon)
+
+    sepN(row,6)
+
+    
+
+    #--------------------------------------------tongue--------------------------------------
+    row = l.row()
+    self.putButton(row, icon=secondaryIcon)
+    self.putButton(row)#tongue_master
+    self.putButton(row, icon=secondaryIcon)
+
+    #-------------------------------------------teeth.B--------------------------------------------
+    row = l.row()
+    col = row.column()
+    self.putButton(col)#teeth.B
+
+    #----------------------------------------------chin--------------------------------------
+    row = l.row()
+    row.alignment = 'CENTER'
+    self.putButton(row, icon=secondaryIcon)
+    row = l.row()
+    row.alignment = 'CENTER'
+    self.putButton(row, icon=secondaryIcon)
+
+    row = l.row()
+    row.label("")
+    self.putButton(row, icon=secondaryIcon)
+    self.putButton(row, icon = primaryIcon)
+    self.putButton(row, icon=secondaryIcon)
+    row.label("")
+
+    #---------------------------------------------jaw--------------------------------------
+    row = l.row()
+    row.alignment = 'CENTER'
+    self.putButton(row, icon=secondaryIcon)
+
+    row = l.row()
+    self.putButton(row)#jaw_master
+
+    
+    #-------------------------------------------tongue secondary----------------------------
+    row = l.row()    
+
+    row.alignment = 'CENTER'
+    subcol = row.column()
+    subcol.label("tongue secondary")
+    self.putButton(subcol, icon=secondaryIcon)
+    self.putButton(subcol, icon=secondaryIcon)
+    self.putButton(subcol, icon=secondaryIcon)
+    self.putButton(subcol, icon=secondaryIcon)
+
+    subcol = row.column()
+    subcol.label("nose secondary")
+    self.putButton(subcol, icon=secondaryIcon)
+    self.putButton(subcol, icon=secondaryIcon)
+    self.putButton(subcol, icon=secondaryIcon)
+    self.putButton(subcol, icon=secondaryIcon)
 
 #------------------------------------------- Register functions -------------------------------------------------
 def register():
