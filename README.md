@@ -4,7 +4,7 @@ This script is picker for Rigify. Supported Level is Testing and Categories is R
 
 Picker is visible only in Pose Mode on Properties Shelf.
 
-Metarig and Pitchipoy body is supported.
+Metarig and Pitchipoy body/face is supported.
 
 # How to add extra bones
 ##picker
