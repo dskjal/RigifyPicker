@@ -22,7 +22,7 @@ bl_info = {
     "author": "dskjal",
     "version": (2, 0),
     "blender": (2, 78, 0),
-    "location": "Properties Shelf",
+    "location": "Tool Shelf > Tools",
     "description": "Rigify Picker",
     "warning": "",
     "support": "TESTING",
