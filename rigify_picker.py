@@ -63,9 +63,9 @@ class %sButton(bpy.types.Operator):
 
     return code + '''
     if isPitchipoy():
-      o.pose.bones["%s%s"]["IK/FK"] = %s
+      o.pose.bones["%s%s"]["IK/FK"] = %f
     else:
-      o.pose.bones["%s.ik%s"]["ikfk_switch"] = %s
+      o.pose.bones["%s.ik%s"]["ikfk_switch"] = %f
     return{"FINISHED"}
 
 ''' % (boneName[isArm][0], lr, isFK, boneName[isArm][1], lr, 1-isFK)
